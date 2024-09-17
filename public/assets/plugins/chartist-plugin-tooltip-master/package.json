@@ -30,7 +30,9 @@
       "url": "https://github.com/Globegitter/chartist-plugin-tooltip/blob/master/LICENSE"
     }
   ],
-  "dependencies": {},
+  "dependencies": {
+    "chartist-plugin-tooltips": "file:"
+  },
   "devDependencies": {
     "chartist": "~0.7.3",
     "grunt": "^0.4.5",

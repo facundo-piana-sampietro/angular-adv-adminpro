@@ -25,7 +25,8 @@
   "dependencies": {
     "jquery": "^2.2.3",
     "respond.js": "^1.4.2",
-    "shoestring": "^1.0.3"
+    "shoestring": "^1.0.3",
+    "tablesaw": "file:"
   },
   "devDependencies": {
     "grunt": "^1.0.1",

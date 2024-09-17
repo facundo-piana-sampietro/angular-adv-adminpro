@@ -30,7 +30,8 @@
     }
   ],
   "dependencies": {
-    "jquery": ">=1.7"
+    "jquery": ">=1.7",
+    "typeahead.js": "file:"
   },
   "devDependencies": {
     "chai": "^1.9.1",

@@ -14,22 +14,27 @@
         "url": "git://github.com/amazingSurge/jquery-asColorPicker.git"
     },
     "bugs": "https://github.com/amazingSurge/jquery-asColorPicker/issues",
-    "licenses": [{
-        "type": "GPL",
-        "url": "https://github.com/amazingSurge/jquery-asColorPicker/blob/master/LICENSE-GPL"
-    }],
+    "licenses": [
+        {
+            "type": "GPL",
+            "url": "https://github.com/amazingSurge/jquery-asColorPicker/blob/master/LICENSE-GPL"
+        }
+    ],
     "devDependencies": {
-        "grunt-contrib-jshint": "*",
+        "grunt": "*",
+        "grunt-autoprefixer": "*",
+        "grunt-contrib-clean": "*",
         "grunt-contrib-concat": "*",
+        "grunt-contrib-copy": "*",
+        "grunt-contrib-jshint": "*",
+        "grunt-contrib-less": "*",
         "grunt-contrib-uglify": "*",
         "grunt-contrib-watch": "*",
-        "grunt-contrib-clean": "*",
-        "grunt": "*",
         "grunt-jsbeautifier": "*",
-        "load-grunt-tasks": "*",
         "grunt-text-replace": "*",
-        "grunt-contrib-copy": "*",
-        "grunt-contrib-less": "*",
-        "grunt-autoprefixer": "*"
+        "load-grunt-tasks": "*"
+    },
+    "dependencies": {
+        "jquery-asColorPicker": "file:"
     }
 }
