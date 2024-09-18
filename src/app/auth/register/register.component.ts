@@ -1,9 +1,9 @@
 import { UsuarioService } from './../../services/usuario.service';
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import swal from 'sweetalert2';
 import { RegisterForm } from '../../interfaces/register-form.interface';
 import { Router } from '@angular/router';
+import { ModalService } from '../../services/modal.service';
 
 @Component({
   selector: 'app-register',
@@ -17,8 +17,8 @@ export class RegisterComponent {
     public registerForm = new FormGroup({
       nombre: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('123456', Validators.required),
-      password2: new FormControl('1234567', Validators.required),
+      password: new FormControl('', Validators.required),
+      password2: new FormControl('', Validators.required),
       terminos: new FormControl(false, [Validators.required, Validators.requiredTrue])
     },
       [
@@ -28,6 +28,7 @@ export class RegisterComponent {
 
     constructor(
       private _us: UsuarioService,
+      private _ms: ModalService,
       private router: Router
     ) {}
 
@@ -44,7 +45,7 @@ export class RegisterComponent {
           this.router.navigateByUrl("/")
         },
         error: (err) => {
-          swal.fire('Error', err.error.msg, 'error')
+          this._ms.modalError('Error al crear usuario', err.error.msg)
         }
       })
 

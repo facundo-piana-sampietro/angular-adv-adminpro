@@ -1,12 +1,33 @@
+import { environment } from "../../environments/environment.prod"
+
+const base_url = environment.base_url
 export class Usuario {
-  /*private nombre: string
-  private email: string
-  private role: string
-  private google: boolean
-  private img: string
-  private id?: string
 
-  constructor(){
+  constructor(
+      public nombre: string,
+      public email: string,
+      public password?: string,
+      public role?: string,
+      public img?: string,
+      public google?: boolean,
+      public id?: string
+  ) {
+  }
 
-  }*/
+  get imagenUrl(){
+    if ( this.img?.includes('https')){
+        return this.img ?? `${base_url}/uploads/usuarios/no-img`;
+    }
+
+    if (this.img){
+      return `${base_url}/uploads/usuarios/${this.img}`
+    } else {
+      return `${base_url}/uploads/usuarios/no-img`
+    }
+  }
+}
+
+export interface UsuarioResponse {
+  ok: boolean;
+  usuario: Usuario;
 }

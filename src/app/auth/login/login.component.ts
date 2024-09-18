@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import swal from 'sweetalert2';
 import { LoginForm } from '../../interfaces/login-form.interface';
+import { ModalService } from '../../services/modal.service';
 
 declare const google: any
 
@@ -24,7 +25,8 @@ export class LoginComponent implements AfterViewInit {
 
   constructor(
     private router: Router,
-    private _us: UsuarioService
+    private _us: UsuarioService,
+    private _ms: ModalService
   ){}
 
   ngAfterViewInit(): void {
@@ -32,26 +34,10 @@ export class LoginComponent implements AfterViewInit {
   }
 
   googleInit() {
-    google.accounts.id.initialize({
-      client_id: "848168248590-fo77c7uftqur2j3csgm21hs5rhsh538t.apps.googleusercontent.com",
-      callback: (response: any) => this.handleCredentialResponse(response)
-    });
-
     google.accounts.id.renderButton(
      this.googleBtn.nativeElement,
       { theme: "outline", size: "large" }  // customization attributes
     );
-  }
-
-  handleCredentialResponse( response: any ){
-    this._us.loginGoogle( response.credential ).subscribe({
-      next: () => {
-        this.router.navigateByUrl("/")
-      },
-      error: (err) => {
-        swal.fire('Error', err.error.msg, 'error')
-      }
-    })
   }
 
   login(){
@@ -68,7 +54,7 @@ export class LoginComponent implements AfterViewInit {
         this.router.navigateByUrl("/")
       },
       error: (err) => {
-        swal.fire('Error', err.error.msg, 'error')
+        this._ms.modalError('Error al loguearse', err.error)
       }
     })
   }
