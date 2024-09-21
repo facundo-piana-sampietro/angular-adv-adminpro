@@ -1,13 +1,14 @@
-import { Usuario, UsuarioResponse } from './../models/usuario.model';
+import { Usuario} from './../models/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
-import { catchError, map, tap } from 'rxjs/operators'
+import { catchError, delay, map, tap } from 'rxjs/operators'
 
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { environment } from '../../environments/environment.prod';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { CargarUsuariosResponse, UsuarioResponse } from '../interfaces/usuarios-response.interface';
 
 declare const google: any
 
@@ -34,6 +35,14 @@ export class UsuarioService {
     return this.usuario.id ?? '';
   }
 
+  get headers(){
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    }
+  }
+
   crearUsuario( formData: RegisterForm ): Observable<UsuarioResponse>{
     return this.http.post<UsuarioResponse>(`${base_url}/usuarios`, formData)
                 .pipe(
@@ -44,9 +53,33 @@ export class UsuarioService {
   }
 
   actualizarUsuario(data: {email:string, nombre: string, role?: string}): Observable<UsuarioResponse>{
-    return this.http.put<UsuarioResponse>(`${base_url}/usuarios/${this.id}`, data, {  headers: {
-      'x-token': this.token
-    }})
+    return this.http.put<UsuarioResponse>(`${base_url}/usuarios/${this.id}`, data, this.headers)
+  }
+
+  guardarUsuario( usuario: Usuario): Observable<UsuarioResponse>{
+    return this.http.put<UsuarioResponse>(`${base_url}/usuarios/${usuario.id}`, usuario, this.headers)
+  }
+
+  cargarUsuarios(desde: number = 0): Observable<CargarUsuariosResponse>{
+    const url = `${ base_url }/usuarios?desde=${ desde }`;
+    return this.http.get<CargarUsuariosResponse>(url, this.headers)
+    .pipe(
+      delay(500),
+      map( resp => {
+        const usuarios = resp.usuarios.map(
+          user => new Usuario(user.nombre, user.email, '', user.role, user.img, user.google, user.id)
+        )
+
+        return {
+          total: resp.total,
+          usuarios
+        }
+      })
+    )
+  }
+
+  eliminarUsuario( usuario: Usuario){
+    return this.http.delete<UsuarioResponse>(`${base_url}/usuarios/${usuario.id}`, this.headers)
   }
 
   login( formData: LoginForm ){

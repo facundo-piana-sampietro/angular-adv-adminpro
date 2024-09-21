@@ -15,8 +15,12 @@ export class Usuario {
   }
 
   get imagenUrl(){
-    if ( this.img?.includes('https')){
-        return this.img ?? `${base_url}/uploads/usuarios/no-img`;
+    if (!this.img){
+      return `${base_url}/uploads/usuarios/no-img`
+    }
+
+    if ( this.img.includes('https')){
+        return this.img
     }
 
     if (this.img){
@@ -27,7 +31,3 @@ export class Usuario {
   }
 }
 
-export interface UsuarioResponse {
-  ok: boolean;
-  usuario: Usuario;
-}

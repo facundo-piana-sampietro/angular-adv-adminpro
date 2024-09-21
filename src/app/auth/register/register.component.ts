@@ -40,11 +40,14 @@ export class RegisterComponent {
       }
 
       const formData = this.registerForm.value as RegisterForm;
+      this._ms.modalSpinner();
       this._us.crearUsuario(formData).subscribe({
         next: () => {
+          this._ms.cerrarModalSpinner();
           this.router.navigateByUrl("/")
         },
         error: (err) => {
+          this._ms.cerrarModalSpinner()
           this._ms.modalError('Error al crear usuario', err.error.msg)
         }
       })

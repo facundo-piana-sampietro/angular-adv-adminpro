@@ -32,11 +32,14 @@ export class AppComponent implements OnInit {
   }
 
   handleCredentialResponse( response: any ){
+    this._ms.modalSpinner();
     this._us.loginGoogle( response.credential ).subscribe({
       next: () => {
+        this._ms.cerrarModalSpinner()
         this.router.navigateByUrl("/")
       },
       error: (err) => {
+        this._ms.cerrarModalSpinner()
         this._ms.modalError('Error al loguearse', err.error)
       }
     })

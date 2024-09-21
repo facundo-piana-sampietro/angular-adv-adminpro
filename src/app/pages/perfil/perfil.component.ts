@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario.service';
-import { Usuario, UsuarioResponse } from '../../models/usuario.model';
+import { Usuario} from '../../models/usuario.model';
 import { ModalService } from '../../services/modal.service';
 import { FileUploadService } from '../../services/file-upload.service';
+import { UsuarioResponse } from '../../interfaces/usuarios-response.interface';
 
 
 @Component({
@@ -76,12 +77,16 @@ export class PerfilComponent implements OnInit {
       this._ms.modalError('Error al subir imagen', 'No existe ninguna imagen cargada');
       return
     }
+
+    this._ms.modalSpinner()
     this._fus
       .actualizarFoto(this.imagenSubir, 'usuarios', this.usuario.id ?? '')
       .then(img => {
+        this._ms.cerrarModalSpinner()
         this.usuario.img = img
         this._ms.modalSatisfactorio('Imagen actualizada', 'La imagen fue actualizada con éxito')
       }).catch(() => {
+        this._ms.cerrarModalSpinner()
         this._ms.modalError('Error', 'No se pudo subir la imagen')
       });
   }

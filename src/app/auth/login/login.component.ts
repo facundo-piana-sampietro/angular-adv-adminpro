@@ -54,7 +54,7 @@ export class LoginComponent implements AfterViewInit {
         this.router.navigateByUrl("/")
       },
       error: (err) => {
-        this._ms.modalError('Error al loguearse', err.error)
+        this._ms.modalError('Error al loguearse', err.error.msg)
       }
     })
   }
