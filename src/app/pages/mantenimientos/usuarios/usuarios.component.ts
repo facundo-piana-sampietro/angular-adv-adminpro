@@ -6,7 +6,7 @@ import { BusquedasService } from '../../../services/busquedas.service';
 import { ModalService } from '../../../services/modal.service';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
 import { UsuarioService } from '../../../services/usuario.service';
-import { delay, Subscription } from 'rxjs';
+import { delay, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-usuarios',
@@ -18,6 +18,7 @@ export class UsuariosComponent implements OnInit, OnDestroy{
   public totalUsuarios: number = 0;
   public usuarios: Usuario[] = [];
   public usuariosTemp: Usuario[] = [];
+  public cargandoLoader: boolean = true
   public cargando: boolean = false
   public desde: number = 0
   public pagina: number = 0;
@@ -43,7 +44,7 @@ export class UsuariosComponent implements OnInit, OnDestroy{
   }
 
   cargarUsuarios(){
-    this.cargando = true;
+    this.cargandoLoader = true;
     this._us.cargarUsuarios(this.desde).subscribe({
       next: ({total, usuarios}) => {
         this.totalUsuarios = total
@@ -54,7 +55,7 @@ export class UsuariosComponent implements OnInit, OnDestroy{
       error: (err) => {
         this._ms.modalError("Error al obtener usuarios", err.error.msg)
       }
-    }).add(() => this.cargando = false)
+    }).add(() => this.cargandoLoader = false)
   }
 
   cambiarPagina(valor: number){
@@ -69,7 +70,7 @@ export class UsuariosComponent implements OnInit, OnDestroy{
     }
 
     this._bs.buscar('usuarios', termino).subscribe({
-      next: (resultados) => {
+      next: (resultados: Usuario[]) => {
         this.usuarios = resultados ?? this.usuarios
       },
       error: (err) => {
@@ -79,7 +80,7 @@ export class UsuariosComponent implements OnInit, OnDestroy{
   }
 
   eliminarUsuario (usuario: Usuario){
-    if (usuario.id == this._us.id){
+    if (usuario._id == this._us._id){
       this._ms.modalError('Error', 'No puede borrarse a si mismo')
       return
     }
@@ -87,18 +88,16 @@ export class UsuariosComponent implements OnInit, OnDestroy{
     this._ms.modalPregunta('¿Borrar usuario?', `Está a punto de borrar a ${usuario.nombre}`, 'Eliminar', 'Cancelar')
     .then((result) => {
       if (result.value){
-        this._ms.modalSpinner();
+        this.cargando = true;
         this._us.eliminarUsuario(usuario).subscribe({
           next: () => {
-            this._ms.cerrarModalSpinner()
             this._ms.modalSatisfactorio('Eliminado', `El usuario ${usuario.nombre} fue eliminado`)
             this.cargarUsuarios();
           },
-          error: (error) => {
-            this._ms.cerrarModalSpinner()
-            this._ms.modalError('Error al eliminar usuario', error.err.msg);
+          error: (err) => {
+            this._ms.modalError('Error al eliminar usuario', err.error.msg);
           }
-        }).add()
+        }).add(() => this.cargando = false)
       }
     })
   }
@@ -112,7 +111,7 @@ export class UsuariosComponent implements OnInit, OnDestroy{
   }
 
   abrirModal(usuario: Usuario){
-    this._mis.abrirModal('usuarios', usuario.id ?? '', usuario.img);
+    this._mis.abrirModal('usuarios', usuario._id ?? '', usuario.img);
   }
 
 

@@ -1,0 +1,25 @@
+.loading-spinner{
+  width:40px;
+  height:40px;
+  border: 2px solid var(--spinner-border-color, black);
+  border-radius:50%;
+  border-top-color:#0001;
+  display:inline-block;
+  animation:loadingspinner .7s linear infinite;
+}
+
+@keyframes loadingspinner{
+  0%{
+    transform:rotate(0deg)
+  }
+  100%{
+    transform:rotate(360deg)
+  }
+}
+
+.modal-dialog-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

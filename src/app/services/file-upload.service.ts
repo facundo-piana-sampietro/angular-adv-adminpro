@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { TipoEntidad } from '../types/tipo-entidad.type';
 
 const base_url = environment.base_url
 
@@ -11,7 +12,7 @@ export class FileUploadService {
   constructor() { }
 
 
-  async actualizarFoto(archivo: File, tipo: 'usuarios'|'medicos'|'hospitales', id:string){
+  async actualizarFoto(archivo: File, tipo: TipoEntidad, id:string){
     try{
       const url = `${base_url}/uploads/${tipo}/${id}`;
       const formData = new FormData();

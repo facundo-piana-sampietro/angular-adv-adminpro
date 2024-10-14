@@ -21,6 +21,7 @@ export class PerfilComponent implements OnInit {
     nombre: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email])
   });
+  public cargando: boolean = false
 
   constructor(
     private _us: UsuarioService,
@@ -78,16 +79,16 @@ export class PerfilComponent implements OnInit {
       return
     }
 
-    this._ms.modalSpinner()
+    this.cargando = true
     this._fus
-      .actualizarFoto(this.imagenSubir, 'usuarios', this.usuario.id ?? '')
+      .actualizarFoto(this.imagenSubir, 'usuarios', this.usuario._id ?? '')
       .then(img => {
-        this._ms.cerrarModalSpinner()
+
         this.usuario.img = img
         this._ms.modalSatisfactorio('Imagen actualizada', 'La imagen fue actualizada con éxito')
       }).catch(() => {
-        this._ms.cerrarModalSpinner()
+
         this._ms.modalError('Error', 'No se pudo subir la imagen')
-      });
+      }).finally(() => this.cargando = false)
   }
 }

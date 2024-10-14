@@ -1,3 +1,4 @@
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -5,9 +6,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { PagesModule } from './pages/pages.module';
 import { AuthModule } from './auth/auth.module';
 
-import { AppComponent } from './app.component';
 import { NopagefoundComponent } from './nopagefound/nopagefound.component';
 import { provideHttpClient } from '@angular/common/http';
+import { ComponentsModule } from "./components/components.module";
+import { AppComponent } from './app.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,9 +21,13 @@ import { provideHttpClient } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     PagesModule,
-    AuthModule
+    AuthModule,
+    SweetAlert2Module.forRoot({ dismissOnDestroy: false }),
+    ComponentsModule,
+],
+  providers: [
+    provideHttpClient(),
   ],
-  providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -10,8 +10,9 @@ import { ModalService } from '../../services/modal.service';
 })
 export class ModalImagenComponent {
 
-   public imagenSubir: File | undefined;
+  public imagenSubir: File | undefined;
   public imgTemp: any = ''
+  protected cargando: boolean = false
 
   constructor(
     protected _mis: ModalImagenService,
@@ -49,19 +50,18 @@ export class ModalImagenComponent {
     const id = this._mis.id
     const tipo = this._mis.tipo
 
-    this._ms.modalSpinner()
+    this.cargando = true
     this._fus
       .actualizarFoto(this.imagenSubir, tipo, id)
       .then(img => {
-        this._ms.cerrarModalSpinner()
         this._ms.modalSatisfactorio('Imagen actualizada', 'La imagen fue actualizada con éxito')
 
         this._mis.nuevaImagen.emit(img);
-
+        this.cargando = false
         this.cerrarModal()
       }).catch(() => {
-        this._ms.cerrarModalSpinner()
         this._ms.modalError('Error', 'No se pudo subir la imagen')
+        this.cargando = false
         this.cerrarModal()
       });
   }

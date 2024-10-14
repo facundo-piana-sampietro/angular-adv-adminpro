@@ -1,10 +1,11 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import swal from 'sweetalert2';
 import { LoginForm } from '../../interfaces/login-form.interface';
 import { ModalService } from '../../services/modal.service';
+import { tap } from 'rxjs';
 
 declare const google: any
 
@@ -22,6 +23,7 @@ export class LoginComponent implements AfterViewInit {
     password: new FormControl('', Validators.required),
     remember: new FormControl(false)
   });
+  protected cargando: boolean = false
 
   constructor(
     private router: Router,
@@ -42,6 +44,7 @@ export class LoginComponent implements AfterViewInit {
 
   login(){
     const formData = this.loginForm.value as LoginForm;
+    this.cargando = true;
     this._us.login(formData).subscribe({
       next: (res) => {
         const email = this.loginForm.get('email')?.value
@@ -56,6 +59,6 @@ export class LoginComponent implements AfterViewInit {
       error: (err) => {
         this._ms.modalError('Error al loguearse', err.error.msg)
       }
-    })
+    }).add(() => this.cargando = false)
   }
 }

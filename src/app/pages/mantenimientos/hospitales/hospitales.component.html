@@ -5,7 +5,7 @@
         <input
           type="text"
           class="form-control"
-          placeholder="Buscar usuario..."
+          placeholder="Buscar hospital..."
           (keyup)="buscar(txtTermino.value)"
           #txtTermino
         />
@@ -24,55 +24,55 @@
   </div>
 </div>
 
-<div class="row animated fadeIn fast" *ngIf="!cargandoLoader">
+<div class="row" *ngIf="!cargandoLoader">
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Total de usuarios: {{totalUsuarios}}</h4>
-        <h6 class="card-subtitle">Usuarios registrados en mi aplicación</h6>
+
+        <div class="row">
+          <div class="col-8">
+            <h4 class="card-title">Total de hospitales: {{totalHospitales}}</h4>
+            <h6 class="card-subtitle">
+              Hospitales registrados en mi aplicación
+            </h6>
+          </div>
+
+          <div class="col">
+            <div class="text-right">
+              <button class="btn btn-primary" (click)="crearHospital()">
+                <i class="fa fa-hospital-o"></i>
+                Crear hospital
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div class="table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th class="w100">Avatar</th>
-                <th>Correo</th>
+                <th class="w100">Foto</th>
+
                 <th>Nombre</th>
-                <th class="w140">Role</th>
-                <th class="w100">Auth</th>
-                <th class="text-nowrap w100">Acciones</th>
+
+                <th class="w100 text-nowrap">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let usuario of usuarios">
-
+              <tr *ngFor="let hospital of hospitales">
                 <td class="text-center">
-                  <img [src]="usuario.imagenUrl" alt="Avatar de usuario" class="avatar cursor" (click)="abrirModal(usuario)">
-                </td>
-
-                <td>{{usuario.email}}</td>
-
-                <td>{{usuario.nombre}}</td>
-
-                <td>
-                  <select class="form-control" [(ngModel)]="usuario.role" (change)="cambiarRole( usuario )">
-                    <option value="ADMIN_ROLE">Admin</option>
-                    <option value="USER_ROLE">User</option>
-                  </select>
+                  <img [src]="hospital.img | imagen: 'hospitales'" [alt]="hospital.nombre" (click)="abrirModal(hospital)" class="avatar cursor">
                 </td>
 
                 <td>
-                  <span *ngIf="usuario.google" class="label label-danger">Google</span>
-                  <span *ngIf="!usuario.google" class="label label-info">Email</span>
+                  <input type="text" class="form-control" placeholder="Nombre del hospital" [(ngModel)]="hospital.nombre">
                 </td>
 
                 <td class="text-nowrap text-center">
-
-                  <a
-                    data-toggle="tooltip"
-                    data-original-title="Borrar"
-                    (click)="eliminarUsuario(usuario)"
-                    class="cursor">
+                  <a (click)="actualizarHospital(hospital)" class="cursor" data-toggle="tooltip" data-original-title="Guardar">
+                    <i class="fa fa-save m-r-10"></i>
+                  </a>
+                  <a (click)="eliminarHospital(hospital)" class="cursor" data-toggle="tooltip"  data-original-title="Borrar">
                     <i class="fa fa-close text-danger"></i>
                   </a>
                 </td>
@@ -80,12 +80,13 @@
             </tbody>
           </table>
 
-
           <div class="contenedor-espaciado">
+            <div>
             <div *ngIf="txtTermino.value.length == 0">
               <button *ngIf="desde > 0" class="btn btn-secondary" (click)="cambiarPagina(-5)">Anteriores</button>
               &nbsp;
-              <button *ngIf="!(desde + 5 >= totalUsuarios)" class="btn btn-secondary" (click)="cambiarPagina(5)">Siguientes</button>
+              <button *ngIf="!(desde + 5 >= totalHospitales)" class="btn btn-secondary" (click)="cambiarPagina(5)">Siguientes</button>
+            </div>
             </div>
 
             <h6>

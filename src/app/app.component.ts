@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { UsuarioService } from './services/usuario.service';
 import { Router } from '@angular/router';
-import swal from 'sweetalert2';
 import { ModalService } from './services/modal.service';
 
 declare const google: any
@@ -11,16 +10,18 @@ declare const google: any
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements AfterViewInit {
   title = 'adminpro';
+  protected cargando: boolean = false
 
   constructor(
     private _us: UsuarioService,
     private _ms: ModalService,
     private router: Router
-  ){}
+  ){
+  }
 
-  ngOnInit() {
+  ngAfterViewInit(): void {
     this.initializeGoogleAPI();
   }
 
@@ -32,17 +33,16 @@ export class AppComponent implements OnInit {
   }
 
   handleCredentialResponse( response: any ){
-    this._ms.modalSpinner();
-    this._us.loginGoogle( response.credential ).subscribe({
+    this.cargando = true;
+    this._us.loginGoogle( response.credential )
+    .subscribe({
       next: () => {
-        this._ms.cerrarModalSpinner()
         this.router.navigateByUrl("/")
       },
       error: (err) => {
-        this._ms.cerrarModalSpinner()
-        this._ms.modalError('Error al loguearse', err.error)
+        this._ms.modalError('Error al loguearse', err.error.msg)
       }
-    })
+    }).add(() => this.cargando = false);
   }
 
 }

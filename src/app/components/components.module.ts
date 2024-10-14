@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IncrementadorComponent } from './incrementador/incrementador.component';
 import { FormsModule } from '@angular/forms';
 import { DonaComponent } from './dona/dona.component';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 
 
@@ -12,12 +13,14 @@ import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
   declarations: [
     IncrementadorComponent,
     DonaComponent,
-    ModalImagenComponent
+    ModalImagenComponent,
+    SpinnerComponent
   ],
   exports: [
     IncrementadorComponent,
     DonaComponent,
-    ModalImagenComponent
+    ModalImagenComponent,
+    SpinnerComponent
   ],
   imports: [
     CommonModule,
@@ -26,6 +29,7 @@ import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
   ],
   providers: [
     provideCharts(withDefaultRegisterables()),
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ComponentsModule { }

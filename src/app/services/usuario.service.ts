@@ -31,8 +31,8 @@ export class UsuarioService {
     return localStorage.getItem('token') || '';
   }
 
-  get id():string{
-    return this.usuario.id ?? '';
+  get _id():string{
+    return this.usuario._id ?? '';
   }
 
   get headers(){
@@ -53,11 +53,11 @@ export class UsuarioService {
   }
 
   actualizarUsuario(data: {email:string, nombre: string, role?: string}): Observable<UsuarioResponse>{
-    return this.http.put<UsuarioResponse>(`${base_url}/usuarios/${this.id}`, data, this.headers)
+    return this.http.put<UsuarioResponse>(`${base_url}/usuarios/${this._id}`, data, this.headers)
   }
 
   guardarUsuario( usuario: Usuario): Observable<UsuarioResponse>{
-    return this.http.put<UsuarioResponse>(`${base_url}/usuarios/${usuario.id}`, usuario, this.headers)
+    return this.http.put<UsuarioResponse>(`${base_url}/usuarios/${usuario._id}`, usuario, this.headers)
   }
 
   cargarUsuarios(desde: number = 0): Observable<CargarUsuariosResponse>{
@@ -67,7 +67,7 @@ export class UsuarioService {
       delay(500),
       map( resp => {
         const usuarios = resp.usuarios.map(
-          user => new Usuario(user.nombre, user.email, '', user.role, user.img, user.google, user.id)
+          user => new Usuario(user.nombre, user.email, '', user.role, user.img, user.google, user._id)
         )
 
         return {
@@ -79,7 +79,7 @@ export class UsuarioService {
   }
 
   eliminarUsuario( usuario: Usuario){
-    return this.http.delete<UsuarioResponse>(`${base_url}/usuarios/${usuario.id}`, this.headers)
+    return this.http.delete<UsuarioResponse>(`${base_url}/usuarios/${usuario._id}`, this.headers)
   }
 
   login( formData: LoginForm ){
@@ -107,8 +107,8 @@ export class UsuarioService {
       }
     }).pipe(
        map( (resp: any) => {
-          const { nombre, email, role, img = '', google, id } = resp.usuario
-          this.usuario = new Usuario( nombre, email, '', role, img, google, id);
+          const { nombre, email, role, img = '', google, _id } = resp.usuario
+          this.usuario = new Usuario( nombre, email, '', role, img, google, _id);
           localStorage.setItem('token', resp.token)
           return true;
         }),

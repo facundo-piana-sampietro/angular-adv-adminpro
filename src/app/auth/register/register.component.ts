@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors,
 import { RegisterForm } from '../../interfaces/register-form.interface';
 import { Router } from '@angular/router';
 import { ModalService } from '../../services/modal.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -25,6 +26,7 @@ export class RegisterComponent {
         this.passwordsIguales('password', 'password2'),
       ]
     );
+    protected cargando: boolean = false
 
     constructor(
       private _us: UsuarioService,
@@ -40,17 +42,15 @@ export class RegisterComponent {
       }
 
       const formData = this.registerForm.value as RegisterForm;
-      this._ms.modalSpinner();
+      this.cargando = true;
       this._us.crearUsuario(formData).subscribe({
         next: () => {
-          this._ms.cerrarModalSpinner();
           this.router.navigateByUrl("/")
         },
         error: (err) => {
-          this._ms.cerrarModalSpinner()
           this._ms.modalError('Error al crear usuario', err.error.msg)
         }
-      })
+      }).add(() => this.cargando = false)
 
     }
 

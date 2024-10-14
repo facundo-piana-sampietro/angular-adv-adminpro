@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import swal, { SweetAlertIcon } from 'sweetalert2';
+import { SweetAlertIcon } from 'sweetalert2';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 @Injectable({
   providedIn: 'root'
@@ -8,17 +9,16 @@ export class ModalService {
 
   constructor() { }
 
-
   modalSatisfactorio(titulo: string, mensaje: string){
-    swal.fire(titulo, mensaje, 'success')
+    return Swal.fire(titulo, mensaje, 'success')
   }
 
   modalError(titulo: string, mensaje?: string){
-    swal.fire(titulo, mensaje ?? 'Error interno del servidor', 'error')
+    return Swal.fire(titulo, mensaje ?? 'Error interno del servidor', 'error')
   }
 
   modalPregunta(titulo: string, texto: string, txtBtnConfirmar?: string, txtBtnCancelar?: string, icono?: SweetAlertIcon){
-    return swal.fire({
+    return Swal.fire({
       title: titulo,
       text: texto,
       icon: icono ?? "question",
@@ -26,25 +26,23 @@ export class ModalService {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: txtBtnConfirmar ?? "Confirmar",
+      cancelButtonText: txtBtnCancelar ?? "Cancelar",
+
+    })
+  }
+
+  async modalInput(titulo: string, text: string, placeholder: string,txtBtnConfirmar?: string, txtBtnCancelar?: string){
+    return await Swal.fire<string>({
+      title: titulo,
+      text: text,
+      input: 'text',
+      inputPlaceholder: placeholder,
+      showCancelButton: true,
+      confirmButtonText: txtBtnConfirmar ?? "Confirmar",
       cancelButtonText: txtBtnCancelar ?? "Cancelar"
-
     })
   }
 
-  modalSpinner(){
-    swal.fire({
-      title: 'Cargando...',
-      text: 'Espere mientras se realiza la operación',
-      allowEscapeKey: false,
-      allowOutsideClick: false,
-      didOpen : () => {
-        swal.showLoading();
-      }
-    })
-  }
 
-  cerrarModalSpinner(){
-    swal.close();
-  }
 
 }

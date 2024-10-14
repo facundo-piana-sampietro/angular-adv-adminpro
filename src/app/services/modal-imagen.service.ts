@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { TipoEntidad } from '../types/tipo-entidad.type';
 
 const base_url = environment.base_url
 
@@ -9,7 +10,7 @@ const base_url = environment.base_url
 export class ModalImagenService {
 
   private _ocultarModal: boolean = true;
-  public tipo: 'usuarios'|'medicos'|'hospitales' = 'usuarios';
+  public tipo: TipoEntidad = 'usuarios';
   public id:string = ''
   public img?:string = ''
 
@@ -20,7 +21,7 @@ export class ModalImagenService {
     return this._ocultarModal;
   }
 
-  abrirModal(tipo: 'usuarios'|'medicos'|'hospitales', id:string, img:string="no-img") {
+  abrirModal(tipo: TipoEntidad, id:string, img:string="no-img") {
     this._ocultarModal = false;
     this.tipo = tipo;
     this.id = id;
