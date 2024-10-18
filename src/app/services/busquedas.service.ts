@@ -6,6 +6,7 @@ import { Usuario } from '../models/usuario.model';
 import { TipoEntidad } from '../types/tipo-entidad.type';
 import { Hospital } from '../models/hospital.model';
 import { Medico } from '../models/medico.model';
+import { BusquedaGlobalResponse } from '../interfaces/busqueda-global-response.interface';
 
 const base_url = environment.base_url
 
@@ -30,7 +31,7 @@ export class BusquedasService {
 
   private transformarUsuarios( resultados: any[]): Usuario[]{
     return resultados.map(
-      user => new Usuario(user.nombre, user.email, '', user.role, user.img, user.google, user.id)
+      user => new Usuario(user.nombre, user.email, user.role, '', user.img, user.google, user.id)
     )
   }
 
@@ -68,6 +69,12 @@ export class BusquedasService {
           }
         })
       )
+  }
+
+
+  busquedaGlobal( termino: string ): Observable<BusquedaGlobalResponse> {
+    const url = `${ base_url }/todo/${ termino }`;
+    return this.http.get<BusquedaGlobalResponse>(url, this.headers)
   }
 
 }

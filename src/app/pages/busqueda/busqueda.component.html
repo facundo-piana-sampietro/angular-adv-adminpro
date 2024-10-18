@@ -1,0 +1,117 @@
+<div class="row animated fadeIn fast">
+  <div class="col-4">
+    <div class="card">
+      <div class="card-body">
+        <h3>Usuarios</h3>
+
+        @if(!this.usuarios.length){
+          <div class="alert alert-info text-center">
+            <p class="mb-0">No hay usuarios con ese termino</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Avatar</th>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (usuario of this.usuarios; track $index) {
+                  <tr class="animated fadeIn fast">
+                    <td>
+                      <img [src]="usuario.img | imagen:'usuarios'" class="w75">
+                    </td>
+                    <td>
+                      {{usuario.nombre}}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-4">
+    <div class="card">
+      <div class="card-body">
+        <h3>Hospitales</h3>
+
+        @if(this.hospitales.length === 0){
+          <div class="alert alert-info text-center">
+            <p class="mb-0">No hay hospitales con ese termino</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Avatar</th>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (hospital of this.hospitales; track $index) {
+                  <tr class="animated fadeIn fast">
+                    <td>
+                      <img [src]="hospital.img | imagen:'hospitales'" class="w75">
+                    </td>
+                    <td>
+                      {{hospital.nombre}}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="col-4">
+    <div class="card">
+      <div class="card-body">
+        <h3>Médicos</h3>
+
+        @if(this.medicos.length === 0){
+          <div class="alert alert-info text-center">
+            <p class="mb-0">No hay médicos con ese termino</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Avatar</th>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (medico of this.medicos; track $index) {
+                  <tr class="animated fadeIn fast cursor" (click)="abrirMedico(medico)">
+                    <td>
+                      <img [src]="medico.img | imagen:'medicos'" class="w75">
+                    </td>
+                    <td>
+                      {{medico.nombre}}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+@if(cargando){
+  <app-spinner></app-spinner>
+}

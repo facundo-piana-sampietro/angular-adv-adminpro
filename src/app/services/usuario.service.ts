@@ -9,6 +9,7 @@ import { LoginForm } from '../interfaces/login-form.interface';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { CargarUsuariosResponse, UsuarioResponse } from '../interfaces/usuarios-response.interface';
+import { MenuItem } from '../interfaces/menu.interface';
 
 declare const google: any
 
@@ -35,6 +36,10 @@ export class UsuarioService {
     return this.usuario._id ?? '';
   }
 
+  get role(): 'ADMIN_ROLE' | 'USER_ROLE'{
+    return this.usuario.role
+  }
+
   get headers(){
     return {
       headers: {
@@ -43,11 +48,16 @@ export class UsuarioService {
     }
   }
 
+  guardarLocalStorage(token: string, menu: MenuItem[]){
+    localStorage.setItem('token', token)
+    localStorage.setItem('menu', JSON.stringify(menu));
+  }
+
   crearUsuario( formData: RegisterForm ): Observable<UsuarioResponse>{
     return this.http.post<UsuarioResponse>(`${base_url}/usuarios`, formData)
                 .pipe(
                   tap( (resp: any) => {
-                    localStorage.setItem('token', resp.token)
+                    this.guardarLocalStorage(resp.token, resp.menu);
                   })
                 );
   }
@@ -67,7 +77,7 @@ export class UsuarioService {
       delay(500),
       map( resp => {
         const usuarios = resp.usuarios.map(
-          user => new Usuario(user.nombre, user.email, '', user.role, user.img, user.google, user._id)
+          user => new Usuario(user.nombre, user.email, user.role, '', user.img, user.google, user._id)
         )
 
         return {
@@ -86,7 +96,7 @@ export class UsuarioService {
     return this.http.post(`${base_url}/login`, formData)
                 .pipe(
                   tap( (resp: any) => {
-                    localStorage.setItem('token', resp.token)
+                    this.guardarLocalStorage(resp.token, resp.menu);
                   })
                 );
   }
@@ -95,7 +105,7 @@ export class UsuarioService {
     return this.http.post(`${base_url}/login/google`, {/*token: token*/ token})
                 .pipe(
                   tap( (resp: any) => {
-                    localStorage.setItem('token', resp.token)
+                    this.guardarLocalStorage(resp.token, resp.menu);
                   })
                 );
   }
@@ -108,8 +118,8 @@ export class UsuarioService {
     }).pipe(
        map( (resp: any) => {
           const { nombre, email, role, img = '', google, _id } = resp.usuario
-          this.usuario = new Usuario( nombre, email, '', role, img, google, _id);
-          localStorage.setItem('token', resp.token)
+          this.usuario = new Usuario( nombre, email, role, '', img, google, _id);
+          this.guardarLocalStorage(resp.token, resp.menu);
           return true;
         }),
         catchError(err => of(false))
@@ -118,8 +128,7 @@ export class UsuarioService {
 
   logout(){
     localStorage.removeItem('token')
-    //REEMPLAZAR CON THIS.USUARIO.EMAIL
-
+    localStorage.removeItem('menu')
     if (this.usuario.google){
       google.accounts.id.revoke( this.usuario.email , () => {
         this.router.navigateByUrl("/login")
